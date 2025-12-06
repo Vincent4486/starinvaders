@@ -1,0 +1,1 @@
+/usr/bin/cc "CMakeFiles/star-invaders.dir/src/bullet.c.o" "CMakeFiles/star-invaders.dir/src/main.c.o" "CMakeFiles/star-invaders.dir/src/player.c.o" -o star-invaders  /usr/lib/x86_64-linux-gnu/libSDL2.so 

@@ -1,0 +1,3 @@
+/home/vincent/Documents/StarInvaders/build/CMakeFiles/star-invaders.dir
+/home/vincent/Documents/StarInvaders/build/CMakeFiles/edit_cache.dir
+/home/vincent/Documents/StarInvaders/build/CMakeFiles/rebuild_cache.dir
