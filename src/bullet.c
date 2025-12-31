@@ -1,6 +1,6 @@
 #include "bullet.h"
 
-void updateBullets(Bullet* bullets, int* bulletCount, SDL_Renderer* renderer) {
+void updateBullets(Bullet *bullets, int *bulletCount, SDL_Renderer* renderer) {
     int bulletSpeed = 7;
     
     for (int i = 0; i < *bulletCount; i++) {
@@ -20,7 +20,7 @@ void updateBullets(Bullet* bullets, int* bulletCount, SDL_Renderer* renderer) {
     }
 }
 
-void fireBullet(Bullet* bullets, int* bulletCount, SDL_Rect* rect) {
+void fireBullet(Bullet *bullets, int *bulletCount, SDL_Rect* rect) {
     if (*bulletCount < MAX_BULLETS) {
         bullets[*bulletCount].rect.x = rect->x + rect->w / 2 - 2;
         bullets[*bulletCount].rect.y = rect->y - 10;
@@ -28,5 +28,15 @@ void fireBullet(Bullet* bullets, int* bulletCount, SDL_Rect* rect) {
         bullets[*bulletCount].rect.h = 10;
         bullets[*bulletCount].active = 1;
         (*bulletCount)++;
+    }
+}
+
+void cleanupUnrenderedBullets(Bullet* bullets, int* bulletCount) {
+    for (int i = 0; i < *bulletCount; i++){
+        if(bullets[i].active == 0){
+            memmove(&bullets[i], &bullets[i + 1], sizeof(Bullet) * (*bulletCount - i - 1));
+            (*bulletCount)--;
+            i--;
+        }
     }
 }

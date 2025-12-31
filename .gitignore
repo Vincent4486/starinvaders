@@ -1,1 +1,12 @@
 build/
+.vscode/
+*.o
+*.exe
+*.out
+*.log
+.DS_Store
+
+star-invaders
+*.kra
+*.xcf
+*.png
