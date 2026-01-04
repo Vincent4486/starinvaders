@@ -1,9 +1,21 @@
 #include "bullet.h"
+#include "game.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void initBullet(Bullet *bullet, int x, int y) {
+    bullet->rect.x = x;
+    bullet->rect.y = y;
+    bullet->rect.w = 50;  // Bullet width
+    bullet->rect.h = 50; // Bullet height
+    bullet->active = 0;
+}
 
 void updateBullets(Bullet *bullets, int *bulletCount, SDL_Renderer* renderer) {
     int bulletSpeed = 7;
     
-    for (int i = 0; i < *bulletCount; i++) {
+    for (int i = 0; i < MAX_BULLETS; i++) {
         if (bullets[i].active) {
             // Move bullet upward
             bullets[i].rect.y -= bulletSpeed;
@@ -11,32 +23,31 @@ void updateBullets(Bullet *bullets, int *bulletCount, SDL_Renderer* renderer) {
             // Deactivate if bullet goes off screen
             if (bullets[i].rect.y < 0) {
                 bullets[i].active = 0;
+                (*bulletCount)--;
             } else {
-                // Draw bullet
-                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-                SDL_RenderFillRect(renderer, &bullets[i].rect);
+                // Draw bullet using global textures
+                SDL_RenderCopy(renderer, textures.bulletTexture, NULL, &bullets[i].rect);
             }
         }
     }
 }
 
 void fireBullet(Bullet *bullets, int *bulletCount, SDL_Rect* rect) {
-    if (*bulletCount < MAX_BULLETS) {
-        bullets[*bulletCount].rect.x = rect->x + rect->w / 2 - 2;
-        bullets[*bulletCount].rect.y = rect->y - 10;
-        bullets[*bulletCount].rect.w = 4;
-        bullets[*bulletCount].rect.h = 10;
-        bullets[*bulletCount].active = 1;
-        (*bulletCount)++;
+    for (int i = 0; i < MAX_BULLETS; i++) {
+        if (!bullets[i].active) {
+            bullets[i].rect.x = rect->x;
+            bullets[i].rect.y = rect->y;
+            bullets[i].active = 1;
+            (*bulletCount)++;
+            break;
+        }
     }
 }
 
-void cleanupUnrenderedBullets(Bullet* bullets, int* bulletCount) {
-    for (int i = 0; i < *bulletCount; i++){
-        if(bullets[i].active == 0){
-            memmove(&bullets[i], &bullets[i + 1], sizeof(Bullet) * (*bulletCount - i - 1));
-            (*bulletCount)--;
-            i--;
-        }
+void cleanupBullets(Bullet *bullets, int *bulletCount) {
+    // Deactivate all bullets and reset count
+    for (int i = 0; i < MAX_BULLETS; i++) {
+        bullets[i].active = 0;
     }
+    *bulletCount = 0;
 }

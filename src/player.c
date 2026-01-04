@@ -1,26 +1,24 @@
 #include "player.h"
+#include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-Player *createPlayer(SDL_Renderer *renderer, const char *imagePath, int x,
-                     int y) {
+int playerSpeed = 5;
+
+void handlePlayer(SDL_Renderer *renderer, Player *player, int playerSpeed, const Uint8 *keys) {
+  if (keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_A]) {
+    movePlayerLeft(player, playerSpeed);
+  }
+  if (keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_D]) {
+    movePlayerRight(player, playerSpeed, SCREEN_WIDTH);
+  }
+
+  // Render player flipped vertically
+  renderPlayerFlipped(renderer, player, SDL_FLIP_VERTICAL);
+}
+
+Player *createPlayer(int x, int y) {
   Player *player = (Player *)malloc(sizeof(Player));
-
-  SDL_Surface *surface = SDL_LoadBMP(imagePath);
-  if (!surface) {
-    fprintf(stderr, "Could not load image %s: %s\n", imagePath, SDL_GetError());
-    free(player);
-    return NULL;
-  }
-
-  player->texture = SDL_CreateTextureFromSurface(renderer, surface);
-  SDL_FreeSurface(surface);
-
-  if (!player->texture) {
-    fprintf(stderr, "Could not create texture: %s\n", SDL_GetError());
-    free(player);
-    return NULL;
-  }
 
   player->rect.x = x;
   player->rect.y = y;
@@ -31,30 +29,29 @@ Player *createPlayer(SDL_Renderer *renderer, const char *imagePath, int x,
 }
 
 void renderPlayer(SDL_Renderer *renderer, Player *player) {
-  SDL_RenderCopy(renderer, player->texture, NULL, &player->rect);
+  SDL_RenderCopy(renderer, textures.playerTexture, NULL, &player->rect);
 }
 
 void renderPlayerFlipped(SDL_Renderer *renderer, Player *player,
                          SDL_RendererFlip flip) {
-  SDL_RenderCopyEx(renderer, player->texture, NULL, &player->rect, 0, NULL,
+  SDL_RenderCopyEx(renderer, textures.playerTexture, NULL, &player->rect, 0, NULL,
                    flip);
 }
 
-void movePlayerLeft(Player *player, int speed) {
-  if (player->rect.x - speed >= 0) {
-    player->rect.x -= speed;
+void movePlayerLeft(Player *player, int playerSpeed) {
+  if (player->rect.x - playerSpeed >= 0) {
+    player->rect.x -= playerSpeed;
   }
 }
 
-void movePlayerRight(Player *player, int speed, int screenWidth) {
-  if (player->rect.x + player->rect.w + speed <= screenWidth) {
-    player->rect.x += speed;
+void movePlayerRight(Player *player, int playerSpeed, int screenWidth) {
+  if (player->rect.x + player->rect.w + playerSpeed <= screenWidth) {
+    player->rect.x += playerSpeed;
   }
 }
 
 void destroyPlayer(Player *player) {
   if (player) {
-    SDL_DestroyTexture(player->texture);
     free(player);
   }
 }

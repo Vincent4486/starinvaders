@@ -1,8 +1,8 @@
 # Simple Makefile using sdl-config for SDL flags
-CC := gcc
+CC := clang
 SDL_CFLAGS := $(shell sdl2-config --cflags)
 SDL_LIBS := $(shell sdl2-config --libs)
-CFLAGS := -Wall -Wextra -std=c99 $(SDL_CFLAGS)
+CFLAGS := -Wall -Wextra -std=c99 -g $(SDL_CFLAGS)
 SRCDIR := src
 SOURCES := $(wildcard $(SRCDIR)/*.c)
 BUILD_DIR := build
