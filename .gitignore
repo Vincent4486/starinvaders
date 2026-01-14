@@ -1,5 +1,10 @@
 build/
 .vscode/
+.idea/
+*.class
+*.jar
+*.pyc
+__pycache__/
 *.o
 *.exe
 *.out
